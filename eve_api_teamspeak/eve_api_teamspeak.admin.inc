@@ -173,6 +173,21 @@ function eve_api_teamspeak_admin_form($form, &$form_state) {
       );
     }
 
+    $form['teamspeak_settings']['group_assignment_description'] = array(
+      '#title' => t('Group Assignment'),
+      '#description' => t('By default TeamSpeak groups are assigned periodically by cron. Additional behavior can be defined here.'),
+      '#type' => 'item',
+      '#weight' => 20,
+    );
+
+	$form['teamspeak_settings']['group_assignment_immediate'] = array(
+	'#type' => 'checkbox',
+	'#title' => t('Assign TeamSpeak Groups Immediately'),
+	'#description' => t('New TeamSpeak groups are assigned immediately after user registration instead of waiting for the next cron cycle. Cron will continue to add and remove groups as normal.'),
+	'#default_value' => variable_get('eve_api_teamspeak_group_assignment_immediate', FALSE),
+	'#weight' => 30,
+	);
+
     $selectable_options = array(
       1 => '1 Minute',
       5 => '5 Minutes',
@@ -401,6 +416,7 @@ function eve_api_teamspeak_admin_form_submit($form, &$form_state) {
     if (variable_get('eve_api_teamspeak_enable', FALSE)) {
       variable_set('eve_api_teamspeak_bypass_group', (int) $form_state['values']['bypass_group']);
       variable_set('eve_api_teamspeak_nickname', (string) $form_state['values']['nickname']);
+	  variable_set('eve_api_teamspeak_group_assignment_immediate', (bool) $form_state['values']['group_assignment_immediate']);
       variable_set('eve_api_teamspeak_reg_time', (int) $form_state['values']['reg_time']);
       variable_set('eve_api_teamspeak_user_time', (int) $form_state['values']['user_time']);
       variable_set('eve_api_teamspeak_reg_ban_time', (int) $form_state['values']['reg_ban_time']);

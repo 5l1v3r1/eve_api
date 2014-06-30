@@ -114,6 +114,35 @@ function eve_api_teamspeak_user_form_submit($form, &$form_state) {
         'teamspeakDBID' => $teamspeak_dbid,
       ))->condition('uid', $uid, '=')->execute();
 
+	// Instant role assignment if selected in the options
+	if (variable_get('eve_api_teamspeak_group_assignment_immediate', FALSE)) {
+		$result = db_query('SELECT corporationName, corporationTicker FROM {eve_api_alliance_list_corporations}');
+
+		if ($result->rowCount()) {
+		  foreach ($result->fetchAll() as $row) {
+			$corp_info[$row->corporationName] = $row->corporationTicker;
+		  }
+		}
+
+		$result = db_query('SELECT r.rid, r.name FROM {users_roles} ur INNER JOIN {role} r ON (r.rid = ur.rid) WHERE ur.uid = :uid', array(
+		  ':uid' => $uid,
+		));
+
+		if ($result->rowCount()) {
+		  foreach ($result->fetchAll() as $row) {
+			$rname = $row->name;
+
+			foreach ($corp_info as $key => $value) {
+			  if ($key == $rname) {
+				$rname = $value;
+			  }
+			}
+
+			$teamspeakgid = eve_api_teamspeak_group_get_id($ts3, $rname);
+			eve_api_teamspeak_user_add_group($ts3, $teamspeakgid, $teamspeak_dbid);
+		  }
+		}
+	}
     // Need to assign roles.
     drupal_set_message(t('TeamSpeak access granted.'));
     eve_api_teamspeak_disconnect($ts3);
