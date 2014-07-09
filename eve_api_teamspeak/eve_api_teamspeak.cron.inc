@@ -317,10 +317,17 @@ function eve_api_teamspeak_cron_role_sync($item) {
       }
     }
 
+	$no_sync_prefix = variable_get('eve_api_teamspeak_no_sync_prefix', FALSE);
     foreach ($roles as $rid => $rname) {
       if ($rid == 1 || $rid == 2) {
         continue;
       }
+	  
+	  if ($no_sync_prefix) {
+		  if (strpos($rname, $no_sync_prefix) === 0) {
+			continue;
+		  }
+	  }
 
       foreach ($corp_info as $key => $value) {
         if ($key == $rname) {

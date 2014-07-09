@@ -173,6 +173,14 @@ function eve_api_teamspeak_admin_form($form, &$form_state) {
       );
     }
 
+	$form['teamspeak_settings']['no_sync_prefix'] = array(
+		'#type' => 'textfield',
+		'#title' => t('No Sync Role Name Prefix'),
+		'#description' => t('Please enter a prefix for all role names which should not be created on Team Speak.'),
+		'#default_value' => variable_get('eve_api_teamspeak_no_sync_prefix', null),
+		'#weight' => 15,
+	);
+
     $form['teamspeak_settings']['group_assignment_description'] = array(
       '#title' => t('Group Assignment'),
       '#description' => t('By default TeamSpeak groups are assigned periodically by cron. Additional behavior can be defined here.'),
@@ -416,6 +424,7 @@ function eve_api_teamspeak_admin_form_submit($form, &$form_state) {
     if (variable_get('eve_api_teamspeak_enable', FALSE)) {
       variable_set('eve_api_teamspeak_bypass_group', (int) $form_state['values']['bypass_group']);
       variable_set('eve_api_teamspeak_nickname', (string) $form_state['values']['nickname']);
+	  variable_set('eve_api_teamspeak_no_sync_prefix', (string) $form_state['values']['no_sync_prefix']);
 	  variable_set('eve_api_teamspeak_group_assignment_immediate', (bool) $form_state['values']['group_assignment_immediate']);
       variable_set('eve_api_teamspeak_reg_time', (int) $form_state['values']['reg_time']);
       variable_set('eve_api_teamspeak_user_time', (int) $form_state['values']['user_time']);
