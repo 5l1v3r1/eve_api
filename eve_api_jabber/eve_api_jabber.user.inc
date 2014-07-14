@@ -92,12 +92,21 @@ function eve_api_jabber_user_form_validate($form, &$form_state) {
 function eve_api_jabber_user_form_submit($form, &$form_state) {
   $account = $form_state['user'];
 
-  $roles = user_roles();
-
+  $role_array = $account->roles;
+  $roles = '';
+  foreach ($role_array as $key => $value) {
+	if ($key == 1 || $key == 2) {
+	  continue;
+	}
+	$roles .= ($roles != '') ? ',' : '';
+	$roles .= eve_api_jabber_format_name($value);
+  }
+  
   try {
     $query = array(
       'name' => eve_api_jabber_format_display_name($account->name),
       'email' => $account->mail,
+	  'groups' => $roles
     );
 
     if (!empty($form_state['values']['password'])) {
