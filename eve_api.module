@@ -276,6 +276,11 @@ function eve_api_permission() {
     'description' => t('Allow user to view and edit a users EVE API information.'),
   );
 
+  $permissions['change own username'] = array(
+    'title' => t('Change Own Username'),
+    'description' => t('Allow user to change own username by selecting a new main character.'),
+  );
+	
   return $permissions;
 }
 
