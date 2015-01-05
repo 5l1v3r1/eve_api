@@ -427,8 +427,9 @@ function eve_api_user_update_api_form($form, &$form_state, $account, $api_id) {
 
   $uid = (int) $account->uid;
 
-  $result = db_query('SELECT keyID, vCode FROM {eve_api_keys} WHERE apiID = :apiID', array(
-    ':apiID' => (int) $api_id,
+  $result = db_query('SELECT keyID, vCode FROM {eve_api_keys} WHERE apiID = :apiID and uid = :uid', array(
+      ':apiID' => (int) $api_id,
+      ':uid' => (int) $uid,
   ));
 
   if (!$result->rowCount()) {
